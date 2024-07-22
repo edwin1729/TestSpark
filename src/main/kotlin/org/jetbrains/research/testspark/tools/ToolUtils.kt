@@ -5,6 +5,7 @@ import com.intellij.openapi.module.ModuleManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.roots.CompilerModuleExtension
 import com.intellij.openapi.roots.ModuleRootManager
+import org.bouncycastle.util.Strings
 import org.jetbrains.research.testspark.core.data.Report
 import org.jetbrains.research.testspark.core.data.TestCase
 import org.jetbrains.research.testspark.core.data.TestGenerationData
@@ -20,6 +21,13 @@ import java.io.File
 object ToolUtils {
     val sep = File.separatorChar
     val pathSep = File.pathSeparatorChar
+
+    /**
+     * Concatenate strings with OS specific path seperators
+     */
+    fun osJoin(vararg strings: String) : String {
+        return strings.joinToString(sep.toString())
+    }
 
     /**
      * Retrieves the imports code from a given test suite code.

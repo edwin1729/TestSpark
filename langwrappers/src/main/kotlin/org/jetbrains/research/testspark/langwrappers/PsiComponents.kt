@@ -24,6 +24,9 @@ interface PsiMethodWrapper {
     val name: String
     val methodDescriptor: String
     val signature: String
+    val parameterNames: List<String>
+    val parameterTypes: List<String>
+    val returnType: String
     val text: String?
     val containingClass: PsiClassWrapper?
     val containingFile: PsiFile?

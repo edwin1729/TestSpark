@@ -395,7 +395,7 @@ class TestCasePanelFactory(
     }
 
     private fun hasTestAnnotation(element: PsiModifierListOwner): Boolean {
-        return element.modifierList?.annotations?.any { it.qualifiedName == "org.junit.Test" } == true //TODO should work for junit 5 and anythin in general
+        return element.modifierList?.annotations?.any { it.qualifiedName?.contains("Test") ?: false} ?: false
     }
 
     /**

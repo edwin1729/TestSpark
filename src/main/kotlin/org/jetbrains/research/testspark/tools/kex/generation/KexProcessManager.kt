@@ -112,7 +112,7 @@ class KexProcessManager(
 
             val cmd = KexSettingsArguments().buildCommand(
                 javaExecPath,
-                projectClassPath,
+                projectContext,
                 target,
                 resultName,
                 kexSettingsState,

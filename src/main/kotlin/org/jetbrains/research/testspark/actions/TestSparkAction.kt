@@ -117,7 +117,7 @@ class TestSparkAction : AnAction() {
         private val caretOffset: Int = e.dataContext.getData(CommonDataKeys.CARET)?.caretModel?.primaryCaret!!.offset
         private val fileUrl = e.dataContext.getData(CommonDataKeys.VIRTUAL_FILE)!!.presentableUrl
 
-        private val codeTypeButtons: MutableList<JRadioButton> = mutableListOf() //TODO allow only class codeType for Kex?
+        private val codeTypeButtons: MutableList<JRadioButton> = mutableListOf() // TODO allow only class codeType for Kex?
         private val codeTypeButtonGroup = ButtonGroup()
 
         private val nextButton = JButton(PluginLabelsBundle.get("next"))

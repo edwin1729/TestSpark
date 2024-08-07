@@ -16,7 +16,13 @@ import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.progress.Task
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.ComboBox
-import com.intellij.psi.*
+import com.intellij.psi.JavaRecursiveElementVisitor
+import com.intellij.psi.PsiClassInitializer
+import com.intellij.psi.PsiDocumentManager
+import com.intellij.psi.PsiElement
+import com.intellij.psi.PsiField
+import com.intellij.psi.PsiMethod
+import com.intellij.psi.PsiModifierListOwner
 import com.intellij.ui.JBColor
 import com.intellij.ui.LanguageTextField
 import com.intellij.ui.components.JBScrollPane
@@ -339,10 +345,10 @@ class TestCasePanelFactory(
         })
     }
 
-    private fun updateRange(offsets : Pair<Int,Int>, element: PsiElement): Pair<Int, Int> {
+    private fun updateRange(offsets: Pair<Int, Int>, element: PsiElement): Pair<Int, Int> {
         var (start, end) = offsets
         start = if (start < element.textRange.startOffset) start else element.textRange.startOffset
-        end =  if (end > element.textRange.endOffset) end else element.textRange.endOffset
+        end = if (end > element.textRange.endOffset) end else element.textRange.endOffset
         return start to end
     }
 
@@ -364,13 +370,12 @@ class TestCasePanelFactory(
                     super.visitMethod(element)
                     if (hasTestAnnotation(element)) {
                         val (startOffset, endOffset) = range
-                        //apply accumulating folding range
+                        // apply accumulating folding range
                         foldingModel.addFoldRegion(startOffset, endOffset, "...")?.isExpanded = false
                         // reset folding range after end of test method
                         range = element.endOffset to element.endOffset
                     } else {
-                        range = updateRange(range , element)
-
+                        range = updateRange(range, element)
                     }
                 }
 
@@ -379,12 +384,11 @@ class TestCasePanelFactory(
                     range = updateRange(range, field)
                 }
 
-                //These are example static initializers which can also be hidden from the user
+                // These are example static initializers which can also be hidden from the user
                 override fun visitClassInitializer(initializer: PsiClassInitializer) {
                     super.visitClassInitializer(initializer)
                     range = updateRange(range, initializer)
                 }
-
             })
 
             val (startOffset, endOffset) = range
@@ -395,7 +399,7 @@ class TestCasePanelFactory(
     }
 
     private fun hasTestAnnotation(element: PsiModifierListOwner): Boolean {
-        return element.modifierList?.annotations?.any { it.qualifiedName?.contains("Test") ?: false} ?: false
+        return element.modifierList?.annotations?.any { it.qualifiedName?.contains("Test") ?: false } ?: false
     }
 
     /**

@@ -11,9 +11,11 @@ import org.jetbrains.research.testspark.core.data.TestGenerationData
 import org.jetbrains.research.testspark.core.generation.llm.getClassWithTestCaseName
 import org.jetbrains.research.testspark.core.monitor.ErrorMonitor
 import org.jetbrains.research.testspark.core.progress.CustomProgressIndicator
+import org.jetbrains.research.testspark.core.test.SupportedLanguage
 import org.jetbrains.research.testspark.core.utils.DataFilesUtil
 import org.jetbrains.research.testspark.data.IJTestCase
-import org.jetbrains.research.testspark.helpers.JavaClassBuilderHelper
+import org.jetbrains.research.testspark.helpers.java.JavaClassBuilderHelper
+import org.jetbrains.research.testspark.helpers.kotlin.KotlinClassBuilderHelper
 import org.jetbrains.research.testspark.services.TestsExecutionResultService
 import java.io.File
 
@@ -65,35 +67,49 @@ object ToolUtils {
      *
      * @param project The project in which the test generation data will be saved.
      * @param report The report object to be added to the test generation result list.
-     * @param packageLine The package declaration line of the test generation data.
+     * @param packageName The package declaration line of the test generation data.
      * @param importsCode The import statements code of the test generation data.
      */
     fun saveData(
         project: Project,
         report: Report,
-        packageLine: String,
+        packageName: String,
         importsCode: MutableSet<String>,
         fileUrl: String,
         generatedTestData: TestGenerationData,
+        language: SupportedLanguage = SupportedLanguage.Java,
     ) {
         generatedTestData.fileUrl = fileUrl
-        generatedTestData.packageLine = packageLine
+        generatedTestData.packageName = packageName
         generatedTestData.importsCode.addAll(importsCode)
 
         project.service<TestsExecutionResultService>().initExecutionResult(report.testCaseList.values.map { it.id })
 
         for (testCase in report.testCaseList.values) {
             val code = testCase.testCode
-            testCase.testCode = JavaClassBuilderHelper.generateCode(
-                project,
-                getClassWithTestCaseName(testCase.testName),
-                code,
-                generatedTestData.importsCode,
-                generatedTestData.packageLine,
-                generatedTestData.runWith,
-                generatedTestData.otherInfo,
-                generatedTestData,
-            )
+            testCase.testCode = when (language) {
+                SupportedLanguage.Java -> JavaClassBuilderHelper.generateCode(
+                    project,
+                    getClassWithTestCaseName(testCase.testName),
+                    code,
+                    generatedTestData.importsCode,
+                    generatedTestData.packageName,
+                    generatedTestData.runWith,
+                    generatedTestData.otherInfo,
+                    generatedTestData,
+                )
+
+                SupportedLanguage.Kotlin -> KotlinClassBuilderHelper.generateCode(
+                    project,
+                    getClassWithTestCaseName(testCase.testName),
+                    code,
+                    generatedTestData.importsCode,
+                    generatedTestData.packageName,
+                    generatedTestData.runWith,
+                    generatedTestData.otherInfo,
+                    generatedTestData,
+                )
+            }
         }
 
         generatedTestData.testGenerationResultList.add(report)

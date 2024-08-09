@@ -19,7 +19,6 @@ import org.jetbrains.research.testspark.helpers.java.JavaClassBuilderHelper
 import org.jetbrains.research.testspark.helpers.kotlin.KotlinClassBuilderHelper
 import org.jetbrains.research.testspark.services.TestsExecutionResultService
 import java.io.File
-import java.nio.file.Path
 
 object ToolUtils {
     val sep = File.separatorChar
@@ -155,7 +154,6 @@ object ToolUtils {
         }
         return buildPath
     }
-
 
     /**
      * @param path path of the java executable as String. Refactor to type Path eventually

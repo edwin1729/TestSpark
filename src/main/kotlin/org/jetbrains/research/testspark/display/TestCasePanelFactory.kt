@@ -71,6 +71,7 @@ import javax.swing.ScrollPaneConstants
 import javax.swing.SwingUtilities
 import javax.swing.border.Border
 import javax.swing.border.MatteBorder
+import kotlin.collections.HashMap
 
 class TestCasePanelFactory(
     private val project: Project,

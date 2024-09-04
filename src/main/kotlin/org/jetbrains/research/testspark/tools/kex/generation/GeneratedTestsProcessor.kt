@@ -14,6 +14,7 @@ import org.jetbrains.research.testspark.core.generation.llm.getImportsCodeFromTe
 import org.jetbrains.research.testspark.core.monitor.ErrorMonitor
 import org.jetbrains.research.testspark.data.IJReport
 import org.jetbrains.research.testspark.data.ProjectContext
+import org.jetbrains.research.testspark.tools.TestsExecutionResultManager
 import org.jetbrains.research.testspark.tools.ToolUtils
 import org.jetbrains.research.testspark.tools.kex.error.KexErrorManager
 import java.io.File
@@ -36,6 +37,7 @@ class GeneratedTestsProcessor(
         resultName: String,
         classFQN: String,
         generatedTestsData: TestGenerationData,
+        testsExecutionResultManager: TestsExecutionResultManager,
         projectContext: ProjectContext,
     ) {
         val report = IJReport()
@@ -86,6 +88,7 @@ class GeneratedTestsProcessor(
             imports,
             projectContext.fileUrlAsString!!,
             generatedTestsData,
+            testsExecutionResultManager,
         )
     }
 
